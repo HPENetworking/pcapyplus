@@ -92,7 +92,9 @@ def setup(app):
 
 # autoapi configuration
 autoapi_modules = {
-    'pcapyplus': None,
+    'pcapyplus': {
+        'prune': True,
+    },
 }
 
 # Plantweb configuration

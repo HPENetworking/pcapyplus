@@ -225,8 +225,12 @@ PyInit__pcapyplus(void)
   if (PyType_Ready(&BPFProgramType) < 0) {
     return NULL;
   }
+  if (PyType_Ready(&Pcaptype) < 0) {
+    return NULL;
+  }
 
   PyModule_AddObject(m, "BPFProgram", (PyObject *) &BPFProgramType);
+  PyModule_AddObject(m, "Reader", (PyObject *) &Pcaptype);
 
   /* Direct from pcap's net/bpf.h. */
   PyModule_AddIntConstant(m, "DLT_NULL", 0);
