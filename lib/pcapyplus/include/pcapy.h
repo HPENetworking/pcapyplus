@@ -21,6 +21,8 @@
     #define Py_TYPE(ob) (((PyObject*)(ob))->ob_type)
 #endif
 
+#define MULTILINE(...) #__VA_ARGS__
+
 extern "C" {
 PyObject * PyInit__pcapyplus(void);
 }
