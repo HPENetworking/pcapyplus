@@ -50,8 +50,13 @@ static PyObject* p_dump(register pcapdumper* pp, PyObject* args);
 
 
 static PyMethodDef p_methods[] = {
-  {"close", (PyCFunction) p_close, METH_VARARGS, "loops packet dispatching"},
-  {"dump", (PyCFunction) p_dump, METH_VARARGS, "dump a packet to the file"},
+  {"close", (PyCFunction) p_close, METH_VARARGS,
+  MULTILINE(close closes a Dumper.)},
+
+  {"dump", (PyCFunction) p_dump, METH_VARARGS,
+  MULTILINE(dump outputs a packet to the savefile opened with dump_open from
+  type Reader.)},
+
   {NULL, NULL}	/* sentinel */
 };
 

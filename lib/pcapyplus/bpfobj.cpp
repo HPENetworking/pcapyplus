@@ -48,8 +48,14 @@ static PyObject* p_new_bpfobject(PyTypeObject *type, PyObject* args, PyObject *k
 
 
 static PyMethodDef bpf_methods[] = {
-  {"filter", (PyCFunction) p_filter, METH_VARARGS, "filter(packet) applies the filter to the packet, returns 0 if there's no match"},
-  {"get_bpf", (PyCFunction) p_get_bpf, METH_NOARGS, "return packet-matching code as decimal numbers"},
+  {"filter", (PyCFunction) p_filter, METH_VARARGS,
+  MULTILINE(filter tests a packet against a compiled filter as returned by
+  pcapys compile. If the packet is allowed to pass through -1 is returned,
+  otherwise filter returns 0.)},
+
+  {"get_bpf", (PyCFunction) p_get_bpf, METH_NOARGS,
+  MULTILINE(get_bpf returns packet-matching code as decimal numbers)},
+
   {NULL, NULL}	/* sentinel */
 };
 

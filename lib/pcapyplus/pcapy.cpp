@@ -228,9 +228,17 @@ PyInit__pcapyplus(void)
   if (PyType_Ready(&Pcaptype) < 0) {
     return NULL;
   }
+  if (PyType_Ready(&Pdumpertype) < 0) {
+    return NULL;
+  }
+  if (PyType_Ready(&Pkthdr_type) < 0) {
+    return NULL;
+  }
 
   PyModule_AddObject(m, "BPFProgram", (PyObject *) &BPFProgramType);
   PyModule_AddObject(m, "Reader", (PyObject *) &Pcaptype);
+  PyModule_AddObject(m, "Dumper", (PyObject *) &Pdumpertype);
+  PyModule_AddObject(m, "Pkthdr", (PyObject *) &Pkthdr_type);
 
   /* Direct from pcap's net/bpf.h. */
   PyModule_AddIntConstant(m, "DLT_NULL", 0);
