@@ -15,6 +15,8 @@
  * the License.
  */
 
+#define PY_SSIZE_T_CLEAN
+
 #include <Python.h>
 #include <pcap.h>
 
@@ -35,8 +37,7 @@ typedef struct {
 
 // Pkthdr_Type
 
-static void
-pcap_dealloc(register pkthdr* pp)
+static void pcap_dealloc(register pkthdr* pp)
 {
     PyObject_Del(pp);
 }
@@ -74,8 +75,7 @@ static PyMethodDef p_methods[] = {
     {NULL, NULL} /* sentinel */
 };
 
-static PyObject*
-pcap_getattr(pkthdr* pp, char* name)
+static PyObject* pcap_getattr(pkthdr* pp, char* name)
 {
     PyObject *nameobj = PyUnicode_FromString(name);
     PyObject *attr = PyObject_GenericGetAttr((PyObject *)pp, nameobj);
@@ -126,8 +126,7 @@ PyTypeObject Pkthdr_type = {
 };
 
 
-PyObject*
-new_pcap_pkthdr(const struct pcap_pkthdr* hdr)
+PyObject* new_pcap_pkthdr(const struct pcap_pkthdr* hdr)
 {
     if (PyType_Ready(&Pkthdr_type) < 0) {
         return NULL;
@@ -147,8 +146,7 @@ new_pcap_pkthdr(const struct pcap_pkthdr* hdr)
     return (PyObject*)pp;
 }
 
-static PyObject*
-p_getts(register pkthdr* pp, PyObject* args)
+static PyObject* p_getts(register pkthdr* pp, PyObject* args)
 {
     if (Py_TYPE(pp) != &Pkthdr_type) {
         PyErr_SetString(PcapError, "Not a pkthdr object");
@@ -158,8 +156,7 @@ p_getts(register pkthdr* pp, PyObject* args)
     return Py_BuildValue("(ll)", pp->ts.tv_sec, pp->ts.tv_usec);
 }
 
-static PyObject*
-p_getcaplen(register pkthdr* pp, PyObject* args)
+static PyObject* p_getcaplen(register pkthdr* pp, PyObject* args)
 {
     if (Py_TYPE(pp) != &Pkthdr_type) {
         PyErr_SetString(PcapError, "Not a pkthdr object");
@@ -169,8 +166,7 @@ p_getcaplen(register pkthdr* pp, PyObject* args)
     return Py_BuildValue("l", pp->caplen);
 }
 
-static PyObject*
-p_getlen(register pkthdr* pp, PyObject* args)
+static PyObject* p_getlen(register pkthdr* pp, PyObject* args)
 {
     if (Py_TYPE(pp) != &Pkthdr_type) {
         PyErr_SetString(PcapError, "Not a pkthdr object");
@@ -180,8 +176,7 @@ p_getlen(register pkthdr* pp, PyObject* args)
     return Py_BuildValue("l", pp->len);
 }
 
-int
-pkthdr_to_native(PyObject *pyhdr, struct pcap_pkthdr *hdr)
+int pkthdr_to_native(PyObject *pyhdr, struct pcap_pkthdr *hdr)
 {
     if (Py_TYPE(pyhdr) != &Pkthdr_type) {
         PyErr_SetString(PcapError, "Not a pkthdr object");

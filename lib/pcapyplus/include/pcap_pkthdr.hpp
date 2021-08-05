@@ -20,10 +20,8 @@
 
 #include <pcap.h>
 
-PyObject*
-new_pcap_pkthdr(const struct pcap_pkthdr* hdr);
-int
-pkthdr_to_native(PyObject *pyhdr, struct pcap_pkthdr *hdr);
+PyObject* new_pcap_pkthdr(const struct pcap_pkthdr* hdr);
+int pkthdr_to_native(PyObject *pyhdr, struct pcap_pkthdr *hdr);
 
 extern PyTypeObject Pkthdr_type;
 

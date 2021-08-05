@@ -15,8 +15,10 @@
  * the License.
  */
 
-#include <pcap.h>
+#define PY_SSIZE_T_CLEAN
+
 #include <Python.h>
+#include <pcap.h>
 
 #include "pcapy.hpp"
 #include "pcapobj.hpp"
@@ -31,8 +33,7 @@ PyObject *PcapError;
 
 // module methods
 
-static PyObject*
-findalldevs(PyObject *self, PyObject *args)
+static PyObject* findalldevs(PyObject *self, PyObject *args)
 {
     char errbuff[PCAP_ERRBUF_SIZE];
     pcap_if_t *devs;
@@ -60,8 +61,7 @@ findalldevs(PyObject *self, PyObject *args)
     return list;
 }
 
-static PyObject*
-open_live(PyObject *self, PyObject *args)
+static PyObject* open_live(PyObject *self, PyObject *args)
 {
     char errbuff[PCAP_ERRBUF_SIZE];
     char * device;
@@ -71,9 +71,9 @@ open_live(PyObject *self, PyObject *args)
 
     bpf_u_int32 net, mask;
 
-
-    if (!PyArg_ParseTuple(args,"siii:open_live",&device,&snaplen,&promisc,
-                          &to_ms)) {
+    if (!PyArg_ParseTuple(
+            args, "siii:open_live", &device, &snaplen, &promisc, &to_ms
+            )) {
         return NULL;
     }
 
@@ -95,8 +95,7 @@ open_live(PyObject *self, PyObject *args)
     return new_pcapobject(pt, net, mask);
 }
 
-static PyObject*
-pcap_create(PyObject *self, PyObject *args)
+static PyObject* pcap_create(PyObject *self, PyObject *args)
 {
     char errbuff[PCAP_ERRBUF_SIZE];
     char * device;
@@ -125,8 +124,7 @@ pcap_create(PyObject *self, PyObject *args)
     return new_pcapobject(pt, net, mask);
 }
 
-static PyObject*
-open_offline(PyObject *self, PyObject *args)
+static PyObject* open_offline(PyObject *self, PyObject *args)
 {
     char errbuff[PCAP_ERRBUF_SIZE];
     char * filename;
@@ -148,8 +146,7 @@ open_offline(PyObject *self, PyObject *args)
 }
 
 
-static PyObject*
-bpf_compile(PyObject* self, PyObject* args)
+static PyObject* bpf_compile(PyObject* self, PyObject* args)
 {
     int linktype;
     int snaplen;
@@ -213,8 +210,12 @@ static PyMethodDef pcap_methods[] = {
     {NULL, NULL}
 };
 
-PyDoc_STRVAR(pcap_doc,
-             "A wrapper for the Packet Capture (PCAP) library");
+
+PyDoc_STRVAR(
+    pcap_doc,
+    "A wrapper for the Packet Capture (PCAP) library"
+);
+
 
 static struct PyModuleDef pcapy_module = {
     PyModuleDef_HEAD_INIT,
@@ -228,9 +229,8 @@ static struct PyModuleDef pcapy_module = {
     NULL,             /* m_free */
 };
 
-PyMODINIT_FUNC
-PyInit__pcapyplus(void)
 
+PyMODINIT_FUNC PyInit__pcapyplus(void)
 {
     PyObject *m, *d;
 

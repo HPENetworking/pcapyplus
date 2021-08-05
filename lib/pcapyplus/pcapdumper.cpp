@@ -15,6 +15,8 @@
  * the License.
  */
 
+#define PY_SSIZE_T_CLEAN
+
 #include <Python.h>
 #include <pcap.h>
 
@@ -32,8 +34,7 @@ static bool validate_pcapdumper(register const pcapdumper* pp);
 
 // Pdumpertype
 
-static void
-pcap_dealloc(register pcapdumper* pp)
+static void pcap_dealloc(register pcapdumper* pp)
 {
     if (pp->dumper) {
         pcap_dump_close(pp->dumper);
@@ -64,8 +65,7 @@ static PyMethodDef p_methods[] = {
     {NULL, NULL} /* sentinel */
 };
 
-static PyObject*
-pcap_getattr(pcapdumper* pp, char* name)
+static PyObject* pcap_getattr(pcapdumper* pp, char* name)
 {
     PyObject *nameobj = PyUnicode_FromString(name);
     PyObject *attr = PyObject_GenericGetAttr((PyObject *)pp, nameobj);
@@ -115,8 +115,7 @@ PyTypeObject Pdumpertype = {
     0,                       /* tp_new */
 };
 
-PyObject*
-new_pcapdumper(pcap_dumper_t *dumper)
+PyObject* new_pcapdumper(pcap_dumper_t *dumper)
 {
     if (PyType_Ready(&Pdumpertype) < 0) {
         return NULL;
@@ -134,18 +133,17 @@ new_pcapdumper(pcap_dumper_t *dumper)
     return (PyObject*)pp;
 }
 
-static PyObject*
-p_dump(register pcapdumper* pp, PyObject* args)
+static PyObject* p_dump(register pcapdumper* pp, PyObject* args)
 {
     PyObject *pyhdr;
     u_char *data;
-    int len;
+    Py_ssize_t length;
 
     if (validate_pcapdumper(pp) == false) {
         return NULL;
     }
 
-    if (!PyArg_ParseTuple(args,"Oy#",&pyhdr,&data,&len)) {
+    if (!PyArg_ParseTuple(args, "Oy#", &pyhdr, &data, &length)) {
         return NULL;
     }
 
@@ -167,8 +165,7 @@ p_dump(register pcapdumper* pp, PyObject* args)
 
 // PdumperClose
 
-static PyObject*
-p_close(register pcapdumper* pp, PyObject* args)
+static PyObject* p_close(register pcapdumper* pp, PyObject* args)
 {
     if (validate_pcapdumper(pp) == false) {
         return NULL;
@@ -184,8 +181,7 @@ p_close(register pcapdumper* pp, PyObject* args)
     return Py_None;
 }
 
-static bool
-validate_pcapdumper(register const pcapdumper* pp) {
+static bool validate_pcapdumper(register const pcapdumper* pp) {
     if (pp == NULL || Py_TYPE(pp) != &Pdumpertype) {
         PyErr_SetString(PcapError, "Not a pcapdumper object");
         return false;

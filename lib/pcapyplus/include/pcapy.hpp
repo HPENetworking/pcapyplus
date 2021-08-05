@@ -17,12 +17,8 @@
 
 #ifndef __PCAPY_H__
 
-#ifndef Py_TYPE  // python3 compatible
-    #define Py_TYPE(ob) (((PyObject*)(ob))->ob_type)
-#endif
-
 extern "C" {
-PyObject * PyInit__pcapyplus(void);
+    PyObject* PyInit__pcapyplus(void);
 }
 
 // exception object

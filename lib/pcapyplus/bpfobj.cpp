@@ -15,8 +15,10 @@
  * the License.
  */
 
-#include <pcap.h>
+#define PY_SSIZE_T_CLEAN
+
 #include <Python.h>
+#include <pcap.h>
 
 #include "bpfobj.hpp"
 #include "pcapy.hpp"
@@ -31,8 +33,7 @@ typedef struct {
 
 // BPFProgramType
 
-static void
-bpfprog_dealloc(register bpfobject* bpf)
+static void bpfprog_dealloc(register bpfobject* bpf)
 {
     pcap_freecode(&bpf->bpf);
     PyObject_Del(bpf);
@@ -64,8 +65,7 @@ static PyMethodDef bpf_methods[] = {
     {NULL, NULL} /* sentinel */
 };
 
-static PyObject*
-bpfprog_getattr(bpfobject* pp, char* name)
+static PyObject* bpfprog_getattr(bpfobject* pp, char* name)
 {
     PyObject *nameobj = PyUnicode_FromString(name);
     PyObject *attr = PyObject_GenericGetAttr((PyObject *)pp, nameobj);
@@ -116,8 +116,7 @@ PyTypeObject BPFProgramType = {
 };
 
 
-PyObject*
-new_bpfobject(const struct bpf_program &bpfprog)
+PyObject* new_bpfobject(const struct bpf_program &bpfprog)
 {
     if (PyType_Ready(&BPFProgramType) < 0) {
         return NULL;
@@ -135,9 +134,9 @@ new_bpfobject(const struct bpf_program &bpfprog)
 }
 
 
-static PyObject*
-p_new_bpfobject(PyTypeObject *type, PyObject *args, PyObject *kwds)
-{
+static PyObject* p_new_bpfobject(
+    PyTypeObject *type, PyObject *args, PyObject *kwds
+) {
     char *filter_string;
     int linktype = 1; // DLT_EN10MB
     if (!PyArg_ParseTuple(args, "s|i", &filter_string, &linktype)) {
@@ -156,31 +155,33 @@ p_new_bpfobject(PyTypeObject *type, PyObject *args, PyObject *kwds)
 }
 
 
-static PyObject*
-p_filter(register bpfobject* bpf, PyObject* args)
+static PyObject* p_filter(register bpfobject* bpf, PyObject* args)
 {
     int status;
     u_char* packet;
-    unsigned int len;
+    Py_ssize_t length;
+    u_int native_length;
 
     if (Py_TYPE(bpf) != &BPFProgramType) {
         PyErr_SetString(BPFError, "Not a bpfprogram object");
         return NULL;
     }
 
-    if (!PyArg_ParseTuple(args,"y#:filter",&packet, &len)) {
+    if (!PyArg_ParseTuple(args,"y#:filter",&packet, &length)) {
         return NULL;
     }
 
-    status = bpf_filter(bpf->bpf.bf_insns,
-                        packet,
-                        len, len);
+    // Support for PEP-0353
+    // https://www.python.org/dev/peps/pep-0353/#conversion-guidelines
+    native_length = Py_SAFE_DOWNCAST(length, Py_ssize_t, u_int);
+
+    status = bpf_filter(bpf->bpf.bf_insns, packet, native_length, native_length);
 
     return Py_BuildValue("i", status);
 }
 
-static PyObject*
-p_get_bpf(register bpfobject* bpf, PyObject* args)
+
+static PyObject* p_get_bpf(register bpfobject* bpf, PyObject* args)
 {
     struct bpf_insn *insn;
     int i;
