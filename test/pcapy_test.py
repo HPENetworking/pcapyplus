@@ -19,18 +19,19 @@
 Tests to check valid package version.
 """
 
-from packaging import version
-
-#from pcapyplus import __version__
 import os
 import sys
-import pytest
-import pcapyplus
 from pathlib import Path
+
+import pytest
+import packaging.version
+
+import pcapyplus
 
 
 _96PINGS = str(Path(__file__).parent / '96pings.pcap')
-_IFACE = 'vboxnet0'
+IFACE = 'vboxnet0'
+
 
 def test_version():
     """
@@ -40,7 +41,10 @@ def test_version():
 
     This is basically the basic test to bootstrap a pytest testing suite.
     """
-    assert version.parse(pcapyplus.__version__) >= version.parse('0.1.0')
+    assert (
+        packaging.version.parse(pcapyplus.__version__) >=
+        packaging.version.parse('0.1.0')
+    )
 
 
 def test_packet_header_ref_count():
@@ -56,6 +60,7 @@ def test_packet_header_ref_count():
     # get one & check its refcount
     assert sys.getrefcount(r.next()[0]) == sys.getrefcount(_Simple())
 
+
 def test_eof_value():
     """
     #2 empty string is returned as packet body at end of file
@@ -65,7 +70,7 @@ def test_eof_value():
     # get one & check its refcount
 
     i = 0
-    refNone = sys.getrefcount(None)
+    refnone = sys.getrefcount(None)  # noqa
     hdr, pkt = r.next()
     while hdr is not None:
         hdr, pkt = r.next()
@@ -74,14 +79,17 @@ def test_eof_value():
     assert hdr is None
     assert pkt == b''
     del hdr
-    # assert  refNone == sys.getrefcount(None)
 
-def testBPFFilter():
+    # FIXME: This assert fails in upstream.
+    # assert refnone == sys.getrefcount(None)
+
+
+def test_bpf_filter():
     """
     #3 test offline BPFFilter
     """
     r = pcapyplus.open_offline(_96PINGS)
-    bpf = pcapyplus.BPFProgram("ip dst host 192.168.1.1")
+    bpf = pcapyplus.BPFProgram('ip dst host 192.168.1.1')
 
     hdr, pkt = r.next()
     while hdr is not None:
@@ -89,24 +97,26 @@ def testBPFFilter():
         assert f != 0
         hdr, pkt = r.next()
 
-@pytest.mark.skip(reason="requires interface info")
+
+@pytest.mark.skip(reason='requires interface info')
 def test_live_capture():
     """
     #4 test live capture
     """
-    r = pcapyplus.open_live(_IFACE, 60000, 1, 1500)
+    r = pcapyplus.open_live(IFACE, 60000, 1, 1500)
     net = r.getnet()
     assert net == '192.168.56.0'
     hdr, body = r.next()
     assert hdr is not None
 
-@pytest.mark.skip(reason="requires interface info")
+
+@pytest.mark.skip(reason='requires interface info')
 def test_send_packet():
     """
     #5 test sendpacket
     """
     r = pcapyplus.open_offline(_96PINGS)
-    w = pcapyplus.open_live(_IFACE, 60000, 1, 1500)
+    w = pcapyplus.open_live(IFACE, 60000, 1, 1500)
     # get one & check its refcount
 
     i = 0
@@ -115,6 +125,7 @@ def test_send_packet():
         w.sendpacket(pkt)
         hdr, pkt = r.next()
         i += 1
+
 
 def test_packet_dumper():
     """
@@ -152,6 +163,7 @@ def test_packet_dumper():
     finally:
         os.unlink('tmp.pcap')
 
+
 def test_close():
     """
     #7 Test the close method
@@ -160,9 +172,10 @@ def test_close():
     hdr, body = r.next()
     assert hdr is not None
     r.close()
-    # with self.assertRaises(ValueError):
+
     with pytest.raises(ValueError):
         r.next()
+
 
 def test_context_manager():
     """
@@ -172,9 +185,9 @@ def test_context_manager():
         hdr, body = r.next()
         assert hdr is not None
 
-    # with self.assertRaises(ValueError):
     with pytest.raises(ValueError):
         r.next()
+
 
 def test_get_bpf():
     bpf = pcapyplus.compile(pcapyplus.DLT_EN10MB, 2**16, "icmp", 1, 1)
@@ -189,7 +202,9 @@ def test_get_bpf():
 6 0 0 65536
 6 0 0 0"""
 
-    result = str(len(code)) + "\n"
-    result += "\n".join([' '.join(map(str, inst)) for inst in code])
+    result = str(len(code)) + '\n'
+    result += '\n'.join(
+        ' '.join(map(str, inst)) for inst in code
+    )
 
     assert expected == result
