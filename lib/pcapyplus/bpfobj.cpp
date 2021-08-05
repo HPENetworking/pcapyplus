@@ -1,6 +1,6 @@
 /*
- * Copyright (C) 2014-2021 CORE Security Technologies
  * Copyright (C) 2021 Hewlett Packard Enterprise Development LP.
+ * Copyright (C) 2014-2021 CORE Security Technologies
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License.
@@ -48,13 +48,17 @@ static PyObject* p_new_bpfobject(PyTypeObject *type, PyObject* args, PyObject *k
 
 
 static PyMethodDef bpf_methods[] = {
-  {"filter", (PyCFunction) p_filter, METH_VARARGS,
-  MULTILINE(filter tests a packet against a compiled filter as returned by
-  pcapys compile. If the packet is allowed to pass through -1 is returned,
-  otherwise filter returns 0.)},
+  {
+    "filter", (PyCFunction) p_filter, METH_VARARGS,
+    "tests a packet against a compiled filter as returned by pcapy's compile. "
+    "If the packet is allowed to pass through -1 is returned, otherwise "
+    "filter returns 0."
+  },
 
-  {"get_bpf", (PyCFunction) p_get_bpf, METH_NOARGS,
-  MULTILINE(get_bpf returns packet-matching code as decimal numbers)},
+  {
+    "get_bpf", (PyCFunction) p_get_bpf, METH_NOARGS,
+    "returns packet-matching code as decimal numbers."
+  },
 
   {NULL, NULL}	/* sentinel */
 };

@@ -1,6 +1,6 @@
 /*
- * Copyright (C) 2014-2021 CORE Security Technologies
  * Copyright (C) 2021 Hewlett Packard Enterprise Development LP.
+ * Copyright (C) 2014-2021 CORE Security Technologies
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License.
@@ -20,8 +20,6 @@
 #ifndef Py_TYPE  // python3 compatible
     #define Py_TYPE(ob) (((PyObject*)(ob))->ob_type)
 #endif
-
-#define MULTILINE(...) #__VA_ARGS__
 
 extern "C" {
 PyObject * PyInit__pcapyplus(void);

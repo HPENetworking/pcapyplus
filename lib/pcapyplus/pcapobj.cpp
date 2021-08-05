@@ -1,6 +1,6 @@
 /*
- * Copyright (C) 2014-2021 CORE Security Technologies
  * Copyright (C) 2021 Hewlett Packard Enterprise Development LP.
+ * Copyright (C) 2014-2021 CORE Security Technologies
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License.
@@ -87,116 +87,160 @@ static PyObject* p_set_rfmon(register pcapobject* pp, PyObject* args);
 static PyObject* p_activate(register pcapobject* pp, PyObject* args);
 
 static PyMethodDef p_methods[] = {
-  {"loop", (PyCFunction) p_loop, METH_VARARGS,
-  MULTILINE(loop is similar to dispatch except it keeps reading packets until \
-  maxcant packets are processed or error occurs. It does not return when live \
-  read timeouts occur. Rather, specifying a non-zero read timeout to open_live \
-  and then calling dispatch allows the reception and processing of any packets \
-  that arrive when the timeout occurs. A negative maxcant causes loop to loop \
-  forever (or at least until an error occurs). 0 is returned if maxcant is \
-  exhausted)},
+  {
+    "loop", (PyCFunction) p_loop, METH_VARARGS,
+    "similar to dispatch except it keeps reading packets until maxcant "
+    "packets are processed or error occurs. It does not return when live read "
+    "timeouts occur. Rather, specifying a non-zero read timeout to open_live "
+    "and then calling dispatch allows the reception and processing of any "
+    "packets that arrive when the timeout occurs. A negative maxcant causes "
+    "loop to loop forever (or at least until an error occurs). 0 is returned "
+    "if maxcant is exhausted."
+  },
 
-  {"dispatch", (PyCFunction) p_dispatch, METH_VARARGS,
-  MULTILINE(dispatch is used to collect and process packets. maxcant specifies the
-  maximum number of packets to process before returning. This is not a minimum
-  number; when reading a live capture, only one bufferful of packets is read at
-  a time, so fewer than maxcant packets may be processed. A cnt of -1 processes
-  all the packets received in one buffer when reading a live capture, or all
-  the packets in the file when reading a savefile. callback specifies a routine
-  to be called with two arguments: a Pkthdr instance describing the data passed
-  and the data itself.)},
+  {
+    "dispatch", (PyCFunction) p_dispatch, METH_VARARGS,
+    "used to collect and process packets. maxcant specifies the maximum "
+    "number of packets to process before returning. This is not a minimum "
+    "number; when reading a live capture, only one bufferful of packets is "
+    "read at a time, so fewer than maxcant packets may be processed. A cnt of "
+    "-1 processes all the packets received in one buffer when reading a live "
+    "capture, or all the packets in the file when reading a savefile. "
+    "callback specifies a routine to be called with two arguments: a Pkthdr "
+    "instance describing the data passed and the data itself."
+  },
 
-  {"next", (PyCFunction) p_next, METH_NOARGS,
-  MULTILINE(next reads the next packet (by calling dispatch with a maxcant of
-  1) and returns a tuple (header, data) where header is a Pkthdr instance
-  describing the data passed and data is the data itself.)},
+  {
+    "next", (PyCFunction) p_next, METH_NOARGS,
+    "reads the next packet (by calling dispatch with a maxcant of 1) and "
+    "returns a tuple (header, data) where header is a Pkthdr instance "
+    "describing the data passed and data is the data itself."
+  },
 
-  {"setfilter", (PyCFunction) p_setfilter, METH_VARARGS,
-  MULTILINE(setfilter is used to specify a filter for this object.)},
+  {
+    "setfilter", (PyCFunction) p_setfilter, METH_VARARGS,
+    "used to specify a filter for this object."
+  },
 
-  {"getnet", (PyCFunction) p_getnet, METH_VARARGS,
-  MULTILINE(getnet returns the network address for the device)},
+  {
+    "getnet", (PyCFunction) p_getnet, METH_VARARGS,
+    "returns the network address for the device."
+  },
 
-  {"getmask", (PyCFunction) p_getmask, METH_VARARGS,
-  MULTILINE(getmask returns the netmask for the device)},
+  {
+    "getmask", (PyCFunction) p_getmask, METH_VARARGS,
+    "returns the netmask for the device."
+  },
 
-  {"datalink", (PyCFunction) p_datalink, METH_VARARGS,
-  MULTILINE(datalink returns the link layer type; link layer types it can
-  return include all the documented constant values)},
+  {
+    "datalink", (PyCFunction) p_datalink, METH_VARARGS,
+    "returns the link layer type; link layer types it can return include all "
+    "the documented constant values."
+  },
 
-  {"getnonblock", (PyCFunction) p_getnonblock, METH_VARARGS,
-  MULTILINE(getnonblock returns the current non-blocking state of the capture
-  descriptor; it always returns 0 on savefiles.)},
+  {
+    "getnonblock", (PyCFunction) p_getnonblock, METH_VARARGS,
+    "returns the current non-blocking state of the capture descriptor; it "
+    "always returns 0 on savefiles."
+  },
 
-  {"setnonblock", (PyCFunction) p_setnonblock, METH_VARARGS,
-  MULTILINE(setnonblock puts a capture descriptor, opened with open_live, into
-  non-blocking mode, or takes it out of non-blocking mode, depending on whether
-  the state argument is non-zero or zero. It has no effect on savefiles. In
-  non-blocking mode, an attempt to read from the capture descriptor with
-  dispatch will, if no packets are currently available to be read, return 0
-  immediately rather than blocking waiting for packets to arrive. loop and next
-  will not work in non-blocking mode.)},
+  {
+    "setnonblock", (PyCFunction) p_setnonblock, METH_VARARGS,
+    "a capture descriptor, opened with open_live, into non-blocking mode, or "
+    "takes it out of non-blocking mode, depending on whether the state "
+    "argument is non-zero or zero. It has no effect on savefiles. In "
+    "non-blocking mode, an attempt to read from the capture descriptor with "
+    "dispatch will, if no packets are currently available to be read, return "
+    "0 immediately rather than blocking waiting for packets to arrive. loop "
+    "and next will not work in non-blocking mode."
+  },
 
-  {"setdirection", (PyCFunction) p_setdirection, METH_VARARGS,
-  MULTILINE(setdirection set the direction for which packets will be captured)},
+  {
+    "setdirection", (PyCFunction) p_setdirection, METH_VARARGS,
+    "set the direction for which packets will be captured."
+  },
 
-  {"dump_open", (PyCFunction) p_dump_open, METH_VARARGS,
-  MULTILINE(dump_open is called to open a savefile for writing and associate it
-  to a newly created Dumper instance. The name - is a synonym for stdout.
-  filename specifies the name of the file to open.)},
+  {
+    "dump_open", (PyCFunction) p_dump_open, METH_VARARGS,
+    "called to open a savefile for writing and associate it "
+    "to a newly created Dumper instance. The name - is a synonym for stdout. "
+    "filename specifies the name of the file to open."
+  },
 
-  {"sendpacket", (PyCFunction) p_sendpacket, METH_VARARGS,
-  MULTILINE(sendpacket sends a packet through the interface)},
+  {
+    "sendpacket", (PyCFunction) p_sendpacket, METH_VARARGS,
+    "sends a packet through the interface"
+  },
 
-  {"stats", (PyCFunction) p_stats, METH_NOARGS,
-  MULTILINE(stats returns statistics on the current capture as a tuple (recv,
-  drop, ifdrop))},
+  {
+    "stats", (PyCFunction) p_stats, METH_NOARGS,
+    "returns statistics on the current capture as a tuple "
+    "(recv, drop, ifdrop)."
+  },
 
-  {"close", (PyCFunction) p_close, METH_NOARGS,
-  MULTILINE(close closes a Dumper.)},
+  {
+    "close", (PyCFunction) p_close, METH_NOARGS,
+    "closes a Dumper."
+  },
 
-  {"set_snaplen", (PyCFunction)p_set_snaplen, METH_VARARGS,
-  MULTILINE(set_snaplen sets the snapshot length to be used on a capture handle
-  when the handle is activated to snaplen. set_snaplen returns 0 on success or
-  PCAP_ERROR_ACTIVATED if called on a capture handle that has been activated.)},
+  {
+    "set_snaplen", (PyCFunction)p_set_snaplen, METH_VARARGS,
+    "sets the snapshot length to be used on a capture handle "
+    "when the handle is activated to snaplen. set_snaplen returns 0 on "
+    "success or PCAP_ERROR_ACTIVATED if called on a capture handle that has "
+    "been activated."
+  },
 
-  {"set_promisc", (PyCFunction)p_set_promisc, METH_VARARGS,
-  MULTILINE(set_promisc sets whether promiscuous mode should be set on a capture
-  handle when the handle is activated. If promisc is non-zero, promiscuous mode
-  will be set, otherwise it will not be set. set_promisc returns 0 on success or
-  PCAP_ERROR_ACTIVATED if called on a capture handle that has been activated.)},
+  {
+    "set_promisc", (PyCFunction)p_set_promisc, METH_VARARGS,
+    "sets whether promiscuous mode should be set on a capture handle when the "
+    "handle is activated. If promisc is non-zero, promiscuous mode will be "
+    "set, otherwise it will not be set. set_promisc returns 0 on success or "
+    "PCAP_ERROR_ACTIVATED if called on a capture handle that has been "
+    "activated."
+  },
 
-  {"set_timeout", (PyCFunction)p_set_timeout, METH_VARARGS,
-  MULTILINE(set_timeout sets the read timeout that will be used on a capture
-  handle when the handle is activated to to_ms, which is in units of milliseconds.
-  set_timeout returns 0 on success or PCAP_ERROR_ACTIVATED if called on a capture
-  handle that has been activated.)},
+  {
+    "set_timeout", (PyCFunction)p_set_timeout, METH_VARARGS,
+    "sets the read timeout that will be used on a capture handle when the "
+    "handle is activated to to_ms, which is in units of milliseconds. "
+    "Returns 0 on success or PCAP_ERROR_ACTIVATED if called on a capture "
+    "handle that has been activated."
+  },
 
-  {"set_buffer_size", (PyCFunction)p_set_buffer_size, METH_VARARGS,
-  MULTILINE(set_buffer_size sets the buffer size that will be used on a capture
-  handle when the handle is activated to buffer_size, which is in units of
-  bytes. set_buffer_size returns 0 on success or PCAP_ERROR_ACTIVATED if called
-  on a capture handle that has been activated.)},
+  {
+    "set_buffer_size", (PyCFunction)p_set_buffer_size, METH_VARARGS,
+    "sets the buffer size that will be used on a capture handle when the "
+    "handle is activated to buffer_size, which is in units of bytes. "
+    "Returns 0 on success or PCAP_ERROR_ACTIVATED if called on a capture "
+    "handle that has been activated."
+  },
 
-  {"activate", (PyCFunction)p_activate, METH_NOARGS,
-  MULTILINE(activate is used to activate a packet capture handle to look at
-  packets on the network, with the options that were set on the handle being
-  in effect. activate returns 0 on success without warnings, a non-zero positive
-  value on success with warnings, and a negative value on error. A non-zero
-  return value indicates what warning or error condition occurred. has been
-  activated.)},
+  {
+    "activate", (PyCFunction)p_activate, METH_NOARGS,
+    "is used to activate a packet capture handle to look at packets on the "
+    "network, with the options that were set on the handle being in effect. "
+    "Returns 0 on success without warnings, a non-zero positive value on "
+    "success with warnings, and a negative value on error. A non-zero return "
+    "value indicates what warning or error condition occurred."
+  },
 
   {"__enter__", (PyCFunction) p__enter__, METH_NOARGS, NULL},
   {"__exit__", (PyCFunction) p_close, METH_VARARGS, NULL},
 
-  {"getfd", (PyCFunction) p_getfd, METH_VARARGS,
-  MULTILINE(getfd returns, on UNIX, a file descriptor number for a file
-  descriptor on which one can do a select, poll, epoll_wait, kevent, or other
-  such call to wait for it to be possible to read packets without blocking, if
-  such a descriptor exists, or -1, if no such descriptor exists.)},
+  {
+    "getfd", (PyCFunction) p_getfd, METH_VARARGS,
+    "returns, on UNIX, a file descriptor number for a file descriptor on "
+    "which one can do a select, poll, epoll_wait, kevent, or other such call "
+    "to wait for it to be possible to read packets without blocking, if such "
+    "a descriptor exists, or -1, if no such descriptor exists."
+  },
 
-  {"set_rfmon", (PyCFunction)p_set_rfmon, METH_VARARGS,
-  MULTILINE(set monitor mode for a not-yet-activated capture handle)}, /* Available on Npcap, not on Winpcap. */
+  {
+    /* Available on Npcap, not on Winpcap. */
+    "set_rfmon", (PyCFunction)p_set_rfmon, METH_VARARGS,
+    "set monitor mode for a not-yet-activated capture handle."
+  },
 
   {NULL, NULL}	/* sentinel */
 };

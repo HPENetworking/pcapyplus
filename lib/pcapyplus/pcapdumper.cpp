@@ -1,6 +1,6 @@
 /*
- * Copyright (C) 2014-2021 CORE Security Technologies
  * Copyright (C) 2021 Hewlett Packard Enterprise Development LP.
+ * Copyright (C) 2014-2021 CORE Security Technologies
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License.
@@ -50,12 +50,15 @@ static PyObject* p_dump(register pcapdumper* pp, PyObject* args);
 
 
 static PyMethodDef p_methods[] = {
-  {"close", (PyCFunction) p_close, METH_VARARGS,
-  MULTILINE(close closes a Dumper.)},
+  {
+    "close", (PyCFunction) p_close, METH_VARARGS,
+    "closes a Dumper."
+  },
 
-  {"dump", (PyCFunction) p_dump, METH_VARARGS,
-  MULTILINE(dump outputs a packet to the savefile opened with dump_open from
-  type Reader.)},
+  {
+    "dump", (PyCFunction) p_dump, METH_VARARGS,
+    "outputs a packet to the savefile opened with dump_open from type Reader."
+  },
 
   {NULL, NULL}	/* sentinel */
 };

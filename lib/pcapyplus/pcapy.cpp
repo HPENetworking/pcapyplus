@@ -1,6 +1,6 @@
 /*
- * Copyright (C) 2014-2021 CORE Security Technologies
  * Copyright (C) 2021 Hewlett Packard Enterprise Development LP.
+ * Copyright (C) 2014-2021 CORE Security Technologies
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License.
@@ -191,11 +191,28 @@ bpf_compile(PyObject* self, PyObject* args)
 
 
 static PyMethodDef pcap_methods[] = {
-  {"open_live", open_live, METH_VARARGS, "open_live(device, snaplen, promisc, to_ms) opens a pcap device"},
-  {"open_offline", open_offline, METH_VARARGS, "open_offline(filename) opens a pcap formated file"},
-  {"findalldevs", findalldevs, METH_VARARGS, "findalldevs() lists all available interfaces"},
-  {"compile", bpf_compile, METH_VARARGS, "compile(linktype, snaplen, filter, optimize, netmask) creates a bpfprogram object"},
-  {"create", pcap_create, METH_VARARGS, "create(device) is used to create a packet capture handle to look at packets on the network."},
+  {
+    "open_live", open_live, METH_VARARGS,
+    "open_live(device, snaplen, promisc, to_ms) opens a pcap device"
+  },
+  {
+    "open_offline", open_offline, METH_VARARGS,
+    "open_offline(filename) opens a pcap formated file"
+  },
+  {
+    "findalldevs", findalldevs, METH_VARARGS,
+    "findalldevs() lists all available interfaces"
+  },
+  {
+    "compile", bpf_compile, METH_VARARGS,
+    "compile(linktype, snaplen, filter, optimize, netmask) creates a "
+    "bpfprogram object"
+  },
+  {
+    "create", pcap_create, METH_VARARGS,
+    "create(device) is used to create a packet capture handle to look at "
+    "packets on the network."
+  },
   {NULL, NULL}
 };
 
@@ -277,4 +294,3 @@ PyInit__pcapyplus(void)
   }
   return m;
 }
-/* vim: set tabstop=2 shiftwidth=2 expandtab: */

@@ -1,6 +1,6 @@
 /*
- * Copyright (C) 2014-2021 CORE Security Technologies
  * Copyright (C) 2021 Hewlett Packard Enterprise Development LP.
+ * Copyright (C) 2014-2021 CORE Security Technologies
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License.
@@ -49,21 +49,27 @@ static PyObject* p_getlen(register pkthdr* pp, PyObject* args);
 
 
 static PyMethodDef p_methods[] = {
-  {"getts", (PyCFunction) p_getts, METH_VARARGS,
-  MULTILINE(getts returns the timestamp of the packet header.
-  Timestamp is a tuple with two elements: the number of seconds since the Epoch,
-  and the amount of microseconds past the current second.)},
+  {
+    "getts", (PyCFunction) p_getts, METH_VARARGS,
+    "returns the timestamp of the packet header.\n"
+    "Timestamp is a tuple with two elements: the number of seconds since "
+    "the Epoch, and the amount of microseconds past the current second."
+  },
 
-  {"getcaplen", (PyCFunction) p_getcaplen, METH_VARARGS,
-  MULTILINE(getts returns the capture length of the packet header.
-  The capture length is the number of bytes of the packet that are available
-  from the capture.)},
+  {
+    "getcaplen", (PyCFunction) p_getcaplen, METH_VARARGS,
+    "returns the capture length of the packet header.\n"
+    "The capture length is the number of bytes of the packet that are "
+    "available from the capture."
+  },
 
-  {"getlen", (PyCFunction) p_getlen, METH_VARARGS,
-  MULTILINE(getts returns the total length of the packet header.
-  Total length gives the length of the packet, in bytes, which might be more
-  than the number of bytes available from the capture, if the length of the
-  packet is larger than the maximum number of bytes to capture.)},
+  {
+    "getlen", (PyCFunction) p_getlen, METH_VARARGS,
+    "returns the total length of the packet header.\n"
+    "Total length gives the length of the packet, in bytes, which might be "
+    "more than the number of bytes available from the capture, if the length "
+    "of the packet is larger than the maximum number of bytes to capture."
+  },
 
   {NULL, NULL}	/* sentinel */
 };
@@ -188,4 +194,3 @@ pkthdr_to_native(PyObject *pyhdr, struct pcap_pkthdr *hdr)
 
   return 0;
 }
-/* vim: set tabstop=2 shiftwidth=2 expandtab: */
