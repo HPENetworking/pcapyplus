@@ -18,8 +18,8 @@
 #include <Python.h>
 #include <pcap.h>
 
-#include "pcapy.h"
-#include "pcap_pkthdr.h"
+#include "pcapy.hpp"
+#include "pcap_pkthdr.hpp"
 
 #include <netinet/in.h>
 

@@ -18,11 +18,11 @@
 #include <pcap.h>
 #include <Python.h>
 
-#include "pcapy.h"
-#include "pcapobj.h"
-#include "bpfobj.h"
-#include "pcapdumper.h"
-#include "pcap_pkthdr.h"
+#include "pcapy.hpp"
+#include "pcapobj.hpp"
+#include "bpfobj.hpp"
+#include "pcapdumper.hpp"
+#include "pcap_pkthdr.hpp"
 
 
 PyObject *PcapError;

@@ -18,9 +18,9 @@
 #include <Python.h>
 #include <pcap.h>
 
-#include "pcapdumper.h"
-#include "pcap_pkthdr.h"
-#include "pcapy.h"
+#include "pcapdumper.hpp"
+#include "pcap_pkthdr.hpp"
+#include "pcapy.hpp"
 
 // internal pcapdumper
 typedef struct {

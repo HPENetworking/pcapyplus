@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 #
 # Copyright (C) 2021 Hewlett Packard Enterprise Development LP.
+# Copyright (C) 2014-2021 CORE Security Technologies
 #
 # Licensed under the Apache License, Version 2.0 (the "License"); you may not
 # use this file except in compliance with the License.

@@ -18,8 +18,8 @@
 #include <pcap.h>
 #include <Python.h>
 
-#include "bpfobj.h"
-#include "pcapy.h"
+#include "bpfobj.hpp"
+#include "pcapy.hpp"
 
 
 // internal bpfobject

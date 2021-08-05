@@ -18,10 +18,10 @@
 #include <Python.h>
 #include <pcap.h>
 
-#include "pcapobj.h"
-#include "pcapy.h"
-#include "pcapdumper.h"
-#include "pcap_pkthdr.h"
+#include "pcapobj.hpp"
+#include "pcapy.hpp"
+#include "pcapdumper.hpp"
+#include "pcap_pkthdr.hpp"
 
 #include <netinet/in.h>
 
