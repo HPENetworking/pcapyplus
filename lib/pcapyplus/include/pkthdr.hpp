@@ -15,8 +15,9 @@
  * the License.
  */
 
-#ifndef __pcap_pkthdr__
-#define __pcap_pkthdr__
+#ifndef __PPP_PKTHDR_H__
+#define __PPP_PKTHDR_H__
+
 
 #include <pcap.h>
 
@@ -25,4 +26,4 @@ int pkthdr_to_native(PyObject *pyhdr, struct pcap_pkthdr *hdr);
 
 extern PyTypeObject Pkthdr_type;
 
-#endif // __pcap_pkthdr__
+#endif // __PPP_PKTHDR_H__

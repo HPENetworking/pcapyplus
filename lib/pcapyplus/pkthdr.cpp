@@ -20,52 +20,62 @@
 #include <Python.h>
 #include <pcap.h>
 
-#include "pcapdumper.hpp"
-#include "pcap_pkthdr.hpp"
-#include "pcapy.hpp"
+#include "pcapyplus.hpp"
+#include "pkthdr.hpp"
 
-// internal pcapdumper
+#include <netinet/in.h>
+
+
+// internal pcapobject
 typedef struct {
     PyObject_HEAD
-    pcap_dumper_t *dumper;
-} pcapdumper;
+    struct timeval ts;
+    bpf_u_int32 caplen;
+    bpf_u_int32 len;
+} pkthdr;
 
-static bool validate_pcapdumper(register const pcapdumper* pp);
 
-// Pdumpertype
+// Pkthdr_Type
 
-static void pcap_dealloc(register pcapdumper* pp)
+static void pcap_dealloc(register pkthdr* pp)
 {
-    if (pp->dumper) {
-        pcap_dump_close(pp->dumper);
-    }
-
-    pp->dumper = NULL;
-
     PyObject_Del(pp);
 }
 
 
 // pcap methods
-static PyObject* p_close(register pcapdumper* pp, PyObject* args);
-static PyObject* p_dump(register pcapdumper* pp, PyObject* args);
+static PyObject* p_getts(register pkthdr* pp, PyObject* args);
+static PyObject* p_getcaplen(register pkthdr* pp, PyObject* args);
+static PyObject* p_getlen(register pkthdr* pp, PyObject* args);
 
 
 static PyMethodDef p_methods[] = {
     {
-        "close", (PyCFunction) p_close, METH_VARARGS,
-        "closes a Dumper."
+        "getts", (PyCFunction) p_getts, METH_VARARGS,
+        "returns the timestamp of the packet header.\n"
+        "Timestamp is a tuple with two elements: the number of seconds since "
+        "the Epoch, and the amount of microseconds past the current second."
     },
 
     {
-        "dump", (PyCFunction) p_dump, METH_VARARGS,
-        "outputs a packet to the savefile opened with dump_open from type Reader."
+        "getcaplen", (PyCFunction) p_getcaplen, METH_VARARGS,
+        "returns the capture length of the packet header.\n"
+        "The capture length is the number of bytes of the packet that are "
+        "available from the capture."
+    },
+
+    {
+        "getlen", (PyCFunction) p_getlen, METH_VARARGS,
+        "returns the total length of the packet header.\n"
+        "Total length gives the length of the packet, in bytes, which might be "
+        "more than the number of bytes available from the capture, if the length "
+        "of the packet is larger than the maximum number of bytes to capture."
     },
 
     {NULL, NULL} /* sentinel */
 };
 
-static PyObject* pcap_getattr(pcapdumper* pp, char* name)
+static PyObject* pcap_getattr(pkthdr* pp, char* name)
 {
     PyObject *nameobj = PyUnicode_FromString(name);
     PyObject *attr = PyObject_GenericGetAttr((PyObject *)pp, nameobj);
@@ -74,10 +84,10 @@ static PyObject* pcap_getattr(pcapdumper* pp, char* name)
 }
 
 
-PyTypeObject Pdumpertype = {
+PyTypeObject Pkthdr_type = {
     PyVarObject_HEAD_INIT(&PyType_Type, 0)
-    "Dumper",                /* tp_name */
-    sizeof(pcapdumper),      /* tp_basicsize */
+    "Pkthdr",                /* tp_name */
+    sizeof(pkthdr),          /* tp_basicsize */
     0,                       /* tp_itemsize */
     (destructor)pcap_dealloc, /* tp_dealloc */
     0,                       /* tp_print */
@@ -115,76 +125,69 @@ PyTypeObject Pdumpertype = {
     0,                       /* tp_new */
 };
 
-PyObject* new_pcapdumper(pcap_dumper_t *dumper)
+
+PyObject* new_pcap_pkthdr(const struct pcap_pkthdr* hdr)
 {
-    if (PyType_Ready(&Pdumpertype) < 0) {
+    if (PyType_Ready(&Pkthdr_type) < 0) {
         return NULL;
     }
 
-    pcapdumper *pp;
+    pkthdr *pp;
 
-    pp = PyObject_New(pcapdumper, &Pdumpertype);
+    pp = PyObject_New(pkthdr, &Pkthdr_type);
     if (pp == NULL) {
         return NULL;
     }
 
-    pp->dumper = dumper;
+    pp->ts = hdr->ts;
+    pp->caplen = hdr->caplen;
+    pp->len = hdr->len;
 
     return (PyObject*)pp;
 }
 
-static PyObject* p_dump(register pcapdumper* pp, PyObject* args)
+static PyObject* p_getts(register pkthdr* pp, PyObject* args)
 {
-    PyObject *pyhdr;
-    u_char *data;
-    Py_ssize_t length;
-
-    if (validate_pcapdumper(pp) == false) {
+    if (Py_TYPE(pp) != &Pkthdr_type) {
+        PyErr_SetString(PcapError, "Not a pkthdr object");
         return NULL;
     }
 
-    if (!PyArg_ParseTuple(args, "Oy#", &pyhdr, &data, &length)) {
-        return NULL;
-    }
-
-    struct pcap_pkthdr hdr;
-    if (-1 == pkthdr_to_native(pyhdr, &hdr)) {
-        return NULL;
-    }
-
-    if (pp->dumper == NULL) {
-        PyErr_SetString(PcapError, "Dumper is already closed.");
-        return NULL;
-    }
-
-    pcap_dump((u_char *)pp->dumper, &hdr, data);
-
-    Py_INCREF(Py_None);
-    return Py_None;
+    return Py_BuildValue("(ll)", pp->ts.tv_sec, pp->ts.tv_usec);
 }
 
-// PdumperClose
-
-static PyObject* p_close(register pcapdumper* pp, PyObject* args)
+static PyObject* p_getcaplen(register pkthdr* pp, PyObject* args)
 {
-    if (validate_pcapdumper(pp) == false) {
+    if (Py_TYPE(pp) != &Pkthdr_type) {
+        PyErr_SetString(PcapError, "Not a pkthdr object");
         return NULL;
     }
 
-    if (pp->dumper) {
-        pcap_dump_close(pp->dumper);
-    }
-
-    pp->dumper = NULL;
-
-    Py_INCREF(Py_None);
-    return Py_None;
+    return Py_BuildValue("l", pp->caplen);
 }
 
-static bool validate_pcapdumper(register const pcapdumper* pp) {
-    if (pp == NULL || Py_TYPE(pp) != &Pdumpertype) {
-        PyErr_SetString(PcapError, "Not a pcapdumper object");
-        return false;
+static PyObject* p_getlen(register pkthdr* pp, PyObject* args)
+{
+    if (Py_TYPE(pp) != &Pkthdr_type) {
+        PyErr_SetString(PcapError, "Not a pkthdr object");
+        return NULL;
     }
-    return true;
+
+    return Py_BuildValue("l", pp->len);
+}
+
+int pkthdr_to_native(PyObject *pyhdr, struct pcap_pkthdr *hdr)
+{
+    if (Py_TYPE(pyhdr) != &Pkthdr_type) {
+        PyErr_SetString(PcapError, "Not a pkthdr object");
+        return -1;
+    }
+
+    pkthdr *pp = (pkthdr *) pyhdr;
+
+    hdr->ts = pp->ts;
+    hdr->caplen = pp->caplen;
+    hdr->len = pp->len;
+
+    return 0;
 }

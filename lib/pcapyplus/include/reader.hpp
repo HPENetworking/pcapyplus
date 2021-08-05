@@ -15,13 +15,14 @@
  * the License.
  */
 
-#ifndef __pcapdumper__
-#define __pcapdumper__
+#ifndef __PPP_READER_H__
+#define __PPP_READER_H__
 
 
-PyObject*
-new_pcapdumper(pcap_dumper_t *dumper);
+PyObject* new_pcapobject(
+    pcap_t *pcap, bpf_u_int32 net = 0, bpf_u_int32 mask = 0
+);
 
-extern PyTypeObject Pdumpertype;
+extern PyTypeObject Pcaptype;
 
-#endif // __pcapdumper__
+#endif // __PPP_READER_H__

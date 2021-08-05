@@ -20,10 +20,10 @@
 #include <Python.h>
 #include <pcap.h>
 
-#include "pcapobj.hpp"
-#include "pcapy.hpp"
-#include "pcapdumper.hpp"
-#include "pcap_pkthdr.hpp"
+#include "reader.hpp"
+#include "pcapyplus.hpp"
+#include "dumper.hpp"
+#include "pkthdr.hpp"
 
 #include <netinet/in.h>
 
@@ -248,8 +248,7 @@ static PyMethodDef p_methods[] = {
     {NULL, NULL} /* sentinel */
 };
 
-static PyObject*
-pcap_getattr(pcapobject* pp, char* name)
+static PyObject* pcap_getattr(pcapobject* pp, char* name)
 {
     PyObject *nameobj = PyUnicode_FromString(name);
     PyObject *attr = PyObject_GenericGetAttr((PyObject *)pp, nameobj);
@@ -300,8 +299,7 @@ PyTypeObject Pcaptype = {
 };
 
 
-PyObject*
-new_pcapobject(pcap_t *pcap, bpf_u_int32 net, bpf_u_int32 mask)
+PyObject* new_pcapobject(pcap_t *pcap, bpf_u_int32 net, bpf_u_int32 mask)
 {
     if (PyType_Ready(&Pcaptype) < 0) {
         return NULL;
@@ -331,8 +329,7 @@ static void ntos(char* dst, unsigned int n, int ip)
              (ip & 0xFF));
 }
 
-static PyObject*
-p_getnet(register pcapobject* pp, PyObject* args)
+static PyObject* p_getnet(register pcapobject* pp, PyObject* args)
 {
     if (Py_TYPE(pp) != &Pcaptype) {
         PyErr_SetString(PcapError, "Not a pcap object");
@@ -348,8 +345,7 @@ p_getnet(register pcapobject* pp, PyObject* args)
     return Py_BuildValue("s", ip_str);
 }
 
-static PyObject*
-p_getmask(register pcapobject* pp, PyObject* args)
+static PyObject* p_getmask(register pcapobject* pp, PyObject* args)
 {
     if (Py_TYPE(pp) != &Pcaptype) {
         PyErr_SetString(PcapError, "Not a pcap object");
@@ -365,8 +361,7 @@ p_getmask(register pcapobject* pp, PyObject* args)
     return Py_BuildValue("s", ip_str);
 }
 
-static PyObject*
-p_setfilter(register pcapobject* pp, PyObject* args)
+static PyObject* p_setfilter(register pcapobject* pp, PyObject* args)
 {
     struct bpf_program bpfprog;
     int status;
@@ -401,8 +396,7 @@ p_setfilter(register pcapobject* pp, PyObject* args)
     return Py_None;
 }
 
-static PyObject*
-p_next(register pcapobject* pp, PyObject*)
+static PyObject* p_next(register pcapobject* pp, PyObject*)
 {
     struct pcap_pkthdr *hdr = NULL;
     const unsigned char *buf = (const unsigned char*)"";
@@ -471,8 +465,7 @@ struct PcapCallbackContext {
 };
 
 
-static void
-PythonCallBack(u_char *user,
+static void PythonCallBack(u_char *user,
                const struct pcap_pkthdr *header,
                const u_char *packetdata)
 {

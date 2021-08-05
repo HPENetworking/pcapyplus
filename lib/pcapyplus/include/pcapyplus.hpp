@@ -15,14 +15,15 @@
  * the License.
  */
 
-#ifndef __pcapobj__
-#define __pcapobj__
+#ifndef __PPP_H__
+#define __PPP_H__
 
 
-PyObject* new_pcapobject(
-    pcap_t *pcap, bpf_u_int32 net = 0, bpf_u_int32 mask = 0
-);
+extern "C" {
+    PyObject* PyInit__pcapyplus(void);
+}
 
-extern PyTypeObject Pcaptype;
+// exception object
+extern PyObject* PcapError;
 
-#endif // __pcapobj__
+#endif // __PPP_H__

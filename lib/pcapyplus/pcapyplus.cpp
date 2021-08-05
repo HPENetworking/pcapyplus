@@ -20,11 +20,11 @@
 #include <Python.h>
 #include <pcap.h>
 
-#include "pcapy.hpp"
-#include "pcapobj.hpp"
+#include "pcapyplus.hpp"
+#include "reader.hpp"
 #include "bpfobj.hpp"
-#include "pcapdumper.hpp"
-#include "pcap_pkthdr.hpp"
+#include "dumper.hpp"
+#include "pkthdr.hpp"
 
 
 PyObject *PcapError;
@@ -219,7 +219,7 @@ PyDoc_STRVAR(
 
 static struct PyModuleDef pcapy_module = {
     PyModuleDef_HEAD_INIT,
-    "pcapy",          /* m_name */
+    "pcapyplus",      /* m_name */
     pcap_doc,         /* m_doc */
     -1,               /* m_size */
     pcap_methods,     /* m_methods */
@@ -278,14 +278,14 @@ PyMODINIT_FUNC PyInit__pcapyplus(void)
     PyModule_AddIntConstant(m, "PCAP_D_OUT", 2);
 
     d = PyModule_GetDict(m);
-    PcapError = PyErr_NewException("pcapy.PcapError", NULL, NULL);
-    BPFError = PyErr_NewException("pcapy.BPFError", NULL, NULL);
+    PcapError = PyErr_NewException("pcapyplus.PcapError", NULL, NULL);
+    BPFError = PyErr_NewException("pcapyplus.BPFError", NULL, NULL);
     if (PcapError) {
         PyDict_SetItemString(d, "PcapError", PcapError);
     }
-
     if (BPFError) {
         PyDict_SetItemString(d, "BPFError", BPFError);
     }
+
     return m;
 }

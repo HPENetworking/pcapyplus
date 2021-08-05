@@ -21,7 +21,7 @@
 #include <pcap.h>
 
 #include "bpfobj.hpp"
-#include "pcapy.hpp"
+#include "pcapyplus.hpp"
 
 
 // internal bpfobject

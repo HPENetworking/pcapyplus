@@ -15,8 +15,9 @@
  * the License.
  */
 
-#ifndef __bpfobj__
-#define __bpfobj__
+#ifndef __PPP_BPFOBJ_H__
+#define __PPP_BPFOBJ_H__
+
 
 PyObject* new_bpfobject(const struct bpf_program &bpf);
 
@@ -26,4 +27,4 @@ extern PyTypeObject BPFProgramType;
 
 extern PyTypeObject Pcaptype;
 
-#endif // __bpfobj__
+#endif // __PPP_BPFOBJ_H__

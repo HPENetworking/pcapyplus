@@ -15,13 +15,12 @@
  * the License.
  */
 
-#ifndef __PCAPY_H__
+#ifndef __PPP_DUMPER_H__
+#define __PPP_DUMPER_H__
 
-extern "C" {
-    PyObject* PyInit__pcapyplus(void);
-}
 
-// exception object
-extern PyObject* PcapError;
+PyObject* new_pcapdumper(pcap_dumper_t *dumper);
 
-#endif // __PCAPY_H__
+extern PyTypeObject Pdumpertype;
+
+#endif // __PPP_DUMPER_H__
