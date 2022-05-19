@@ -18,7 +18,10 @@ In order to support this project the following features were dropped:
 Documentation
 =============
 
-    https://github.com/HPENetworking/pcapyplus
+.. code-block:: sh
+
+    pip3 install tox
+    tox -e doc
 
 
 Install
@@ -32,7 +35,16 @@ Install
 Changelog
 =========
 
-0.1.0 (2020-02-01)
+1.0.0 (2022-05-19)
+------------------
+
+New
+~~~
+
+- First stable release.
+
+
+0.1.0 (2021-02-01)
 ------------------
 
 New
@@ -46,7 +58,7 @@ License
 
 ::
 
-    Copyright (C) 2021 Hewlett Packard Enterprise Development LP.
+    Copyright (C) 2021-2022 Hewlett Packard Enterprise Development LP.
     Copyright (C) 2014-2021 CORE Security Technologies
 
     Licensed under the Apache License, Version 2.0 (the "License"); you may not
