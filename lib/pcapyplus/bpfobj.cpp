@@ -45,16 +45,20 @@ PyObject* BPFError;
 // BPFProgram methods
 static PyObject* p_filter(register bpfobject* bpf, PyObject* args);
 static PyObject* p_get_bpf(register bpfobject* bpf, PyObject* args);
-static PyObject* p_new_bpfobject(PyTypeObject *type, PyObject* args,
-                                 PyObject *kwags);
+static PyObject* p_new_bpfobject(
+    PyTypeObject *type, PyObject* args, PyObject *kwags
+);
 
 
 static PyMethodDef bpf_methods[] = {
     {
         "filter", (PyCFunction) p_filter, METH_VARARGS,
-        "tests a packet against a compiled filter as returned by pcapy's compile. "
-        "If the packet is allowed to pass through -1 is returned, otherwise "
-        "filter returns 0."
+        "Tests a packet against a compiled filter as returned by "
+        ":py:func:`compile`. \n"
+        "\n"
+        ":return: If the packet is allowed to pass through -1 is returned,\n"
+        " otherwise filter returns 0.\n"
+        ":rtype: int"
     },
 
     {

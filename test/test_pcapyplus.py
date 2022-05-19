@@ -191,7 +191,7 @@ def test_context_manager():
 
 
 def test_get_bpf():
-    bpf = pcapyplus.compile(pcapyplus.DLT_EN10MB, 2**16, "icmp", 1, 1)
+    bpf = pcapyplus.compile(pcapyplus.DLT_EN10MB, 2**16, 'icmp', 1, 1)
     code = bpf.get_bpf()
 
     # result of `tcpdump "icmp" -ddd -s 65536` on EN10MB interface

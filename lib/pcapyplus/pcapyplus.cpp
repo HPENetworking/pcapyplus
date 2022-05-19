@@ -184,7 +184,7 @@ static PyObject* bpf_compile(PyObject* self, PyObject* args)
 }
 
 
-static PyMethodDef pcap_methods[] = {
+static PyMethodDef pcapyplus_methods[] = {
     {
         "open_live", open_live, METH_VARARGS,
         "open_live(device, snaplen, promisc, to_ms) opens a pcap device"
@@ -212,21 +212,21 @@ static PyMethodDef pcap_methods[] = {
 
 
 PyDoc_STRVAR(
-    pcap_doc,
-    "A wrapper for the Packet Capture (PCAP) library"
+    pcapyplus_doc,
+    "Python extension module to access libpcap"
 );
 
 
 static struct PyModuleDef pcapy_module = {
     PyModuleDef_HEAD_INIT,
-    "pcapyplus",      /* m_name */
-    pcap_doc,         /* m_doc */
-    -1,               /* m_size */
-    pcap_methods,     /* m_methods */
-    NULL,             /* m_reload */
-    NULL,             /* m_traverse */
-    NULL,             /* m_clear */
-    NULL,             /* m_free */
+    "pcapyplus",          /* m_name */
+    pcapyplus_doc,        /* m_doc */
+    -1,                   /* m_size */
+    pcapyplus_methods,    /* m_methods */
+    NULL,                 /* m_reload */
+    NULL,                 /* m_traverse */
+    NULL,                 /* m_clear */
+    NULL,                 /* m_free */
 };
 
 

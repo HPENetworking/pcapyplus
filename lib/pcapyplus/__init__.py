@@ -64,9 +64,6 @@ def open_live(device, snaplen, promisc, to_ms):
     """
     Obtain a packet capture descriptor to look at packets on the network.
 
-    open_live is used to obtain a packet capture descriptor to look at packets
-    on the network.
-
     :param str device: Network device to open; on Linux systems with 2.2 or
      later kernels, a device argument of any or NULL can be used to
      capture packets from all interfaces.
@@ -125,22 +122,24 @@ def findalldevs():
     Obtain the list of available network devices.
 
     findalldevs constructs a list of network devices that can be opened with
-    open_live. (Note that there may be network devices that cannot be opened
-    with open_live, because, for example, that process might not have
-    sufficient privileges to open them for capturing; if so, those devices
-    will not appear on the list.)
+    :py:func:`open_live`.
+
+    .. note::
+
+       There may be network devices that cannot be opened with
+       :py:func:`open_live`, because, for example, that process might not have
+       sufficient privileges to open them for capturing; if so, those devices
+       will not appear on the list.
 
     :return: A list of strings with the network device names.
-    :rtype: String
+    :rtype: list
     """
     return _findalldevs()
 
 
 def compile(linktype, snaplen, filter, optimize, netmask):
     """
-    Compile a BPF filter.
-
-    compile is used to compile the filter into a filter program
+    Compile a BPF filter into a filter program.
 
     :param int linktype: Type of the link to be used by the filter.
     :param int snaplen: Maximum number of bytes to capture.
@@ -148,6 +147,9 @@ def compile(linktype, snaplen, filter, optimize, netmask):
     :param int optimize: Controls whether optimization on the resulting code
      is performed
     :param int netmask: Netmask of the local network.
+
+    :return: A BPFProgram object.
+    :rtype: :py:obj:`BPFProgram`
     """
     return _compile(linktype, snaplen, filter, optimize, netmask)
 
