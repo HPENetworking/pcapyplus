@@ -27,6 +27,15 @@ Documentation
 Install
 =======
 
+To install the ``pcapyplus`` package a C++ build system is required, along with
+the ``libpcap`` development headers. In Ubuntu systems, run:
+
+.. code-block:: sh
+
+    sudo apt install build-essential libpcap-dev
+
+Finally, install ``pcapyplus`` with:
+
 .. code-block:: sh
 
     pip3 install pcapyplus
