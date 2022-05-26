@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 #
-# Copyright (C) 2021 Hewlett Packard Enterprise Development LP.
+# Copyright (C) 2021-2022 Hewlett Packard Enterprise Development LP.
 #
 # Licensed under the Apache License, Version 2.0 (the "License"); you may not
 # use this file except in compliance with the License.
@@ -57,7 +57,7 @@ from ._pcapyplus import (
 
 __author__ = 'Hewlett Packard Enterprise Development LP'
 __email__ = 'sdk_tools_frameworks@groups.ext.hpe.com'
-__version__ = '1.0.0'
+__version__ = '1.0.1'
 
 
 def open_live(device, snaplen, promisc, to_ms):
