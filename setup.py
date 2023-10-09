@@ -232,6 +232,55 @@ def find_data(package_path, data_path, **kwargs):
     return data_files
 
 
+def parse_args():
+    from sys import argv
+    from argparse import ArgumentParser
+
+    parser = ArgumentParser()
+    parser.add_argument('--link-static-pcap')
+    args, _ = parser.parse_known_args()
+
+    if args.link_static_pcap:
+
+        if not Path(args.link_static_pcap).is_file():
+            raise ValueError(
+                f'Static PCAP library file {args.link_static_pcap} '
+                'does not exists'
+            )
+
+        # Need to remove the custom flags so setuptools won't complain
+        if '--link-static-pcap' in argv:
+            index = argv.index('--link-static-pcap')
+            del argv[index]
+            del argv[index]
+        else:
+            argv.remove(f'--link-static-pcap={args.link_static_pcap}')
+
+    return args
+
+
+def find_extension_options():
+    """
+    Find the proper Extension parameters to link against libpcap
+
+    By default set the libpcap linking to the shared library (.so), unless the
+    user sets "--link-static-pcap" with the path of the libpcap.a binary.
+
+    This is useful when packaging pcapyplus to avoid the need for the
+    installation environment to have libpcap installed with the same version
+    used while building.
+    """
+    args = parse_args()
+    if args.link_static_pcap:
+        return {
+            'extra_objects': [args.link_static_pcap]
+        }
+
+    return {
+        'libraries': ['pcap']
+    }
+
+
 setup(
     name='pcapyplus',
     version=find_version('lib/pcapyplus/__init__.py'),
@@ -249,7 +298,7 @@ setup(
             name='pcapyplus._pcapyplus',
             sources=find_files('lib', include=('*.cpp', )),
             include_dirs=['lib/pcapyplus/include'],
-            libraries=['pcap'],
+            **find_extension_options()
         )
     ],
 
