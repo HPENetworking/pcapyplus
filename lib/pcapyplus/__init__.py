@@ -57,7 +57,7 @@ from ._pcapyplus import (
 
 __author__ = 'Hewlett Packard Enterprise Development LP'
 __email__ = 'sdk_tools_frameworks@groups.ext.hpe.com'
-__version__ = '1.0.1'
+__version__ = '1.0.2'
 
 
 def open_live(device, snaplen, promisc, to_ms):
